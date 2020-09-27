@@ -14,7 +14,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func TestDarwin_CheckInstall(t *testing.T) {
+func TestNewDarwinPkgCheckInstall(t *testing.T) {
 	tests := []struct {
 		name     string
 		mockExec exec.Interface
@@ -124,7 +124,7 @@ func TestDarwin_CheckInstall(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			handler := handlers.Darwin{Exec: tt.mockExec, Fs: tt.fs()}
+			handler := handlers.NewDarwinPkgCheckInstall(tt.mockExec, tt.fs())
 			if res := handler.CheckInstall(context.Background(), "cat"); res != tt.want {
 				t.Fatal("Fail")
 			}
@@ -132,7 +132,7 @@ func TestDarwin_CheckInstall(t *testing.T) {
 	}
 }
 
-func TestDarwin_Install(t *testing.T) {
+func TestNewDarwinPkgInstall(t *testing.T) {
 	tests := []struct {
 		name     string
 		mockExec exec.Interface
@@ -191,7 +191,7 @@ func TestDarwin_Install(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			handler := handlers.Darwin{Exec: tt.mockExec}
+			handler := handlers.NewDarwinPkgInstall(tt.mockExec, afero.NewMemMapFs())
 			if err := handler.Install(context.Background(), false, tt.params); !tt.hasErr && err != nil {
 				t.Fatalf("%v", err)
 			}
@@ -199,7 +199,7 @@ func TestDarwin_Install(t *testing.T) {
 	}
 }
 
-func TestDarwin_Install__dryrun(t *testing.T) {
+func TestTestDarwinPkgInstall__dryrun(t *testing.T) {
 	tests := []struct {
 		name   string
 		params *handlers.InstallParams
